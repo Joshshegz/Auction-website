@@ -13,7 +13,7 @@
     <p><strong>Posted by:</strong> {{ listing.author.username }}</p>
     <p><strong>Date Created:</strong> {{ listing.date_added }}</p>
 
-    <!-- Watchlist Toggle Button -->
+
     {% if user.is_authenticated %}
         <form action="{% url 'auctions:watchlist' %}" method="post" class="mb-3">
             {% csrf_token %}
@@ -28,7 +28,7 @@
         </form>
     {% endif %}
 
-    <!-- Bidding Section -->
+
     <div class="mt-4 border p-3">
         <h4>Place a Bid</h4>
         <form method="post" action="{% url 'auctions:listing_detail' listing.id %}">
@@ -40,7 +40,7 @@
         </form>
     </div>
 
-    <!-- Comments Section -->
+
     <div class="mt-4 border p-3">
         <h4>Comments</h4>
         {% for comment in listing.comments.all %}

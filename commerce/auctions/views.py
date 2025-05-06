@@ -11,7 +11,8 @@ from django.shortcuts import render, get_object_or_404
 from watchlist.models import Watchlist
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
-
+from django.shortcuts import render
+from .models import AuctionListing
 
 def index(request):
     active_listings = AuctionListing.objects.filter(is_active=True).order_by('-date_added')
@@ -101,10 +102,7 @@ def listing_detail(request, listing_id):
         "user_watchlist_ids": user_watchlist_ids
     })
 
-# auctions/views.py
 
-from django.shortcuts import render
-from .models import AuctionListing
 
 def categories_view(request):
     categories = AuctionListing.objects.values_list("category", flat=True).distinct()
