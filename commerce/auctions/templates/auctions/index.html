@@ -1,0 +1,50 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+    {% if listings %}
+        <div class="row">
+            {% for listing in listings %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        {% if listing.imageurl %}
+                            <img src="{{ listing.imageurl }}" class="card-img-top" alt="{{ listing.title }}" style="max-height: 200px; object-fit: contain;">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ listing.title }}</h5>
+                            <p class="card-text">{{ listing.description|truncatechars:100 }}</p>
+                            <p class="card-text"><strong>Current Price:</strong> ${{ listing.current_price }}</p>
+                            <p class="card-text"><small class="text-muted">Category: {{ listing.category }}</small></p>
+                            <p class="card-text"><small class="text-muted">Starting price: ${{ listing.starting_bid }}</small></p>
+
+                            <!-- View Listing button -->
+                            <a href="{% url 'auctions:listing_detail' listing.id %}" class="btn btn-primary">View Listing</a>
+
+                            <!-- Add to Watchlist form -->
+                            {% if user.is_authenticated %}
+                                <!-- In the watchlist toggle form, update the URL: -->
+                            <form action="{% url 'auctions:watchlist' %}" method="POST" class="mt-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                                <button type="submit" class="btn btn-{% if listing in user.watchlist.all %}outline-danger{% else %}outline-success{% endif %} btn-sm">
+                                    {% if listing in user.watchlist.all %}
+                                        Remove from Watchlist
+                                    {% else %}
+                                        Add to Watchlist
+                                    {% endif %}
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Posted by {{ listing.author.username }} on {{ listing.created_at|date:"M d, Y" }}</small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">No active listings available.</div>
+    {% endif %}
+{% endblock %}

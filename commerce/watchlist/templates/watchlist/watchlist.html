@@ -1,0 +1,44 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Your Watchlist</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        {% for item in watchlist_items %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if item.listing.imageurl %}
+                        <img src="{{ item.listing.imageurl }}" class="card-img-top" alt="{{ item.listing.title }}" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.listing.title }}</h5>
+                        <p class="card-text">{{ item.listing.description|truncatechars:100 }}</p>
+                        <p class="card-text"><strong>Price:</strong> ${{ item.listing.current_price }}</p>
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'auctions:listing_detail' item.listing.id %}" class="btn btn-primary btn-sm">View</a>
+                            <form method="post" action="{% url 'watchlist:toggle_watchlist' item.listing.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">Added {{ item.added_at|timesince }} ago</small>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    Your watchlist is empty. Add items from listings.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{ listing.title }}</h2>
+
+    {% if listing.imageurl %}
+        <img src="{{ listing.imageurl }}" alt="{{ listing.title }}" style="max-width: 400px;" class="img-fluid mb-3">
+    {% endif %}
+
+    <p><strong>Description:</strong> {{ listing.description }}</p>
+    <p><strong>Category:</strong> {{ listing.category }}</p>
+    <p><strong>Current Price:</strong> ${{ listing.current_price }}</p>
+    <p><strong>Posted by:</strong> {{ listing.author.username }}</p>
+    <p><strong>Date Created:</strong> {{ listing.date_added }}</p>
+
+    <!-- Watchlist Toggle Button -->
+    {% if user.is_authenticated %}
+        <form action="{% url 'auctions:watchlist' %}" method="post" class="mb-3">
+            {% csrf_token %}
+            <input type="hidden" name="listing_id" value="{{ listing.id }}">
+            <button type="submit" class="btn btn-{% if listing in user.watchlist.all %}danger{% else %}warning{% endif %}">
+                {% if listing in user.watchlist.all %}
+                    Remove from Watchlist
+                {% else %}
+                    Add to Watchlist
+                {% endif %}
+            </button>
+        </form>
+    {% endif %}
+
+    <!-- Bidding Section -->
+    <div class="mt-4 border p-3">
+        <h4>Place a Bid</h4>
+        <form method="post" action="{% url 'auctions:listing_detail' listing.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="number" name="bid_amount" min="{{ listing.current_price|add:'0.01' }}" step="0.01" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Bid</button>
+        </form>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="mt-4 border p-3">
+        <h4>Comments</h4>
+        {% for comment in listing.comments.all %}
+            <div class="mb-2">
+                <strong>{{ comment.commenter.username }}</strong> ({{ comment.date_added }}):
+                <p>{{ comment.comment }}</p>
+            </div>
+        {% empty %}
+            <p>No comments yet.</p>
+        {% endfor %}
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'auctions:listing_detail' listing.id %}">
+                {% csrf_token %}
+                <textarea name="comment" class="form-control mb-2" placeholder="Add a comment..." required></textarea>
+                <button type="submit" class="btn btn-secondary">Post Comment</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
