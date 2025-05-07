@@ -16,3 +16,4 @@ typing_extensions==4.13.2
 tzdata==2025.1
 virtualenv==20.29.1
 whitenoise==6.6.0
+pymysql==1.1.0
