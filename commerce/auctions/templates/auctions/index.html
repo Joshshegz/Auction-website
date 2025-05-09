@@ -24,7 +24,7 @@
                             <!-- Add to Watchlist form -->
                             {% if user.is_authenticated %}
                                 <!-- In the watchlist toggle form, update the URL: -->
-                            <form action="{% url 'auctions:watchlist' %}" method="POST" class="mt-2">
+                            <form action="{% url 'watchlist:toggle_watchlist' listing.id %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="listing_id" value="{{ listing.id }}">
                                 <button type="submit" class="btn btn-{% if listing in user.watchlist.all %}outline-danger{% else %}outline-success{% endif %} btn-sm">

@@ -14,7 +14,7 @@
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
                     {% if item.listing.imageurl %}
-                        <img src="{{ item.listing.imageurl }}" class="card-img-top" alt="{{ item.listing.title }}" style="height: 200px; object-fit: cover;">
+                        <img src="{{ item.listing.imageurl }}" class="card-img-top img-fluid" style="max-height: 200px; object-fit: contain;">
                     {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ item.listing.title }}</h5>

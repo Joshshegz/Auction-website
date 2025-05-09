@@ -1,18 +1,14 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from .forms import ListingForm
 from django.contrib.auth.decorators import login_required
-from .models import User,AuctionListing
 from django.contrib import messages
-from django.shortcuts import render, get_object_or_404
-from watchlist.models import Watchlist
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect
-from django.shortcuts import render
+from .forms import ListingForm
 from .models import AuctionListing
+from watchlist.models import Watchlist
+from .models import UserComments
 
 def index(request):
     active_listings = AuctionListing.objects.filter(is_active=True).order_by('-date_added')
@@ -60,14 +56,15 @@ def register(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password)
+            User = get_user_model()
+            user = User.objects.create_user(username=username, email=email, password=password)
             user.save()
         except IntegrityError:
             return render(request, "auctions/register.html", {
                 "message": "Username already taken."
             })
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("auctions:index"))
     else:
         return render(request, "auctions/register.html")
 
@@ -93,16 +90,33 @@ def create_listing(request):
 # In auctions/views.py listing_detail view:
 def listing_detail(request, listing_id):
     listing = get_object_or_404(AuctionListing, id=listing_id)
+    comments = UserComments.objects.filter(listing=listing).order_by('-date_added')
     user_watchlist_ids = []
     if request.user.is_authenticated:
         user_watchlist_ids = request.user.user_watchlist.values_list('listing_id', flat=True)
 
     return render(request, "auctions/listing_detail.html", {
         "listing": listing,
-        "user_watchlist_ids": user_watchlist_ids
+        "user_watchlist_ids": user_watchlist_ids,
+        "comments": comments
     })
 
 
+@login_required
+def add_comment(request, listing_id):
+    listing = get_object_or_404(AuctionListing, id=listing_id)
+
+    if request.method == 'POST':
+        comment_text = request.POST.get('comment', '').strip()
+        if comment_text:
+            UserComments.objects.create(
+                commenter=request.user,
+                listing=listing,
+                comment=comment_text
+            )
+            messages.success(request, "Comment added successfully!")
+
+    return redirect('auctions:listing_detail', listing_id=listing.id)
 
 def categories_view(request):
     categories = AuctionListing.objects.values_list("category", flat=True).distinct()

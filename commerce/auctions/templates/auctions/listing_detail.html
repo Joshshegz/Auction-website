@@ -41,22 +41,34 @@
     </div>
 
 
-    <div class="mt-4 border p-3">
-        <h4>Comments</h4>
-        {% for comment in listing.comments.all %}
-            <div class="mb-2">
-                <strong>{{ comment.commenter.username }}</strong> ({{ comment.date_added }}):
-                <p>{{ comment.comment }}</p>
+    <!-- Comments Section -->
+<div class="mt-4 border p-3">
+    <h4>Comments</h4>
+
+    {% if comments %}
+        {% for comment in comments %}
+            <div class="mb-3 p-2 border-bottom">
+                <strong>{{ comment.commenter.username }}</strong>
+                <small class="text-muted">({{ comment.date_added|date:"M d, Y H:i" }})</small>
+                <p class="mt-1">{{ comment.comment }}</p>
             </div>
-        {% empty %}
-            <p>No comments yet.</p>
         {% endfor %}
-        {% if user.is_authenticated %}
-            <form method="post" action="{% url 'auctions:listing_detail' listing.id %}">
-                {% csrf_token %}
-                <textarea name="comment" class="form-control mb-2" placeholder="Add a comment..." required></textarea>
-                <button type="submit" class="btn btn-secondary">Post Comment</button>
-            </form>
-        {% endif %}
-    </div>
+    {% else %}
+        <p class="text-muted">No comments yet.</p>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'auctions:add_comment' listing.id %}" class="mt-3">
+            {% csrf_token %}
+            <div class="form-group">
+                <textarea name="comment" class="form-control" rows="3" placeholder="Add your comment..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+    {% else %}
+        <div class="alert alert-info">
+            <a href="{% url 'auctions:login' %}">Log in</a> to post comments.
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
