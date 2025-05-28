@@ -1,0 +1,77 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}Closed Listings - JOSH AUCTION HAVEN{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="margin-top: 100px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">Closed Listings</h2>
+
+                {% if closed_listings %}
+                    <div class="row">
+                        {% for listing in closed_listings %}
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="card h-100 shadow-sm">
+                                    {% if listing.imageurl %}
+                                        <img src="{{ listing.imageurl }}" class="card-img-top" alt="{{ listing.title }}" style="height: 200px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                            <i class="fa fa-image fa-3x text-muted"></i>
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">{{ listing.title }}</h5>
+                                        <p class="card-text flex-grow-1">{{ listing.description|truncatewords:20 }}</p>
+
+                                        <div class="mt-auto">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="badge bg-secondary">{{ listing.category }}</span>
+                                                {% if listing.winner %}
+                                                    <span class="badge bg-success">Won by {{ listing.winner.username }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">No Winner</span>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <small class="text-muted">Final Price:</small>
+                                                    <h6 class="mb-0 text-success">${{ listing.current_price }}</h6>
+                                                </div>
+                                                <div class="text-end">
+                                                    <small class="text-muted">Closed:</small>
+                                                    <div class="small">{{ listing.date_added|date:"M d, Y" }}</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-2">
+                                                <a href="{% url 'auctions:listing_detail' listing.id %}" class="btn btn-outline-primary btn-sm">View Details</a>
+                                                {% if listing.author == request.user %}
+                                                    <span class="badge bg-info ms-2">Your Listing</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination can be added here if needed -->
+
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fa fa-gavel fa-5x text-muted mb-3"></i>
+                        <h4 class="text-muted">No Closed Listings Found</h4>
+                        <p class="text-muted">There are currently no closed auction listings to display.</p>
+                        <a href="{% url 'auctions:index' %}" class="btn btn-primary">Browse Active Listings</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
