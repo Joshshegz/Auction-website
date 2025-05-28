@@ -207,7 +207,8 @@ def home_page(request):
             'days': '03',
             'hours': '12',
             'minutes': '45',
-            'seconds': '30'
+            'seconds': '30',
+            'image': 'assets/images/upcoming1.jpg'  # Add this
         },
         {
             'title': 'Contemporary Art Pieces',
@@ -216,7 +217,8 @@ def home_page(request):
             'days': '05',
             'hours': '08',
             'minutes': '20',
-            'seconds': '15'
+            'seconds': '15',
+            'image': 'assets/images/upcoming2.jpg'  # Add this
         },
         {
             'title': 'Rare Book Collection',
@@ -225,35 +227,10 @@ def home_page(request):
             'days': '01',
             'hours': '18',
             'minutes': '35',
-            'seconds': '50'
+            'seconds': '50',
+            'image': 'assets/images/upcoming3.jpg'  # Add this
         },
-        {
-            'title': 'Antique Furniture Set',
-            'price': '980.00',
-            'timezone': 'CST',
-            'days': '07',
-            'hours': '14',
-            'minutes': '10',
-            'seconds': '25'
-        },
-        {
-            'title': 'Classic Car Memorabilia',
-            'price': '650.00',
-            'timezone': 'MST',
-            'days': '04',
-            'hours': '22',
-            'minutes': '55',
-            'seconds': '40'
-        },
-        {
-            'title': 'Fine Jewelry Auction',
-            'price': '1500.00',
-            'timezone': 'EST',
-            'days': '02',
-            'hours': '16',
-            'minutes': '25',
-            'seconds': '10'
-        }
+
     ]
 
     # Sample sponsors data
