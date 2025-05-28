@@ -1,50 +1,217 @@
 {% extends "auctions/layout.html" %}
 
-{% block body %}
-    <h2>Active Listings</h2>
-
-    {% if listings %}
+{% block content %}
+    <div class="container-fluid py-5">
         <div class="row">
-            {% for listing in listings %}
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        {% if listing.imageurl %}
-                            <img src="{{ listing.imageurl }}" class="card-img-top" alt="{{ listing.title }}" style="max-height: 200px; object-fit: contain;">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ listing.title }}</h5>
-                            <p class="card-text">{{ listing.description|truncatechars:100 }}</p>
-                            <p class="card-text"><strong>Current Price:</strong> ${{ listing.current_price }}</p>
-                            <p class="card-text"><small class="text-muted">Category: {{ listing.category }}</small></p>
-                            <p class="card-text"><small class="text-muted">Starting price: ${{ listing.starting_bid }}</small></p>
+            <div class="col-12 text-center mb-5">
+                <h1 class="display-4 fw-bold text-dark mb-3">Active Auctions</h1>
+                <p class="lead text-muted">Discover amazing items and place your bids</p>
+                <div class="bg-danger mx-auto" style="height: 4px; width: 80px; border-radius: 2px;"></div>
+            </div>
+        </div>
 
-                            <!-- View Listing button -->
-                            <a href="{% url 'auctions:listing_detail' listing.id %}" class="btn btn-primary">View Listing</a>
+        {% if listings %}
+            <div class="row g-4">
+                {% for listing in listings %}
+                    <div class="col-md-6 col-lg-4 col-xl-3">
+                        <div class="card auction-card h-100 border-0 shadow-sm position-relative overflow-hidden">
+                            <!-- Image Section -->
+                            <div class="position-relative overflow-hidden">
+                                {% if listing.imageurl %}
+                                    <img src="{{ listing.imageurl }}"
+                                         class="card-img-top auction-image"
+                                         alt="{{ listing.title }}"
+                                         style="height: 250px; object-fit: cover; transition: transform 0.3s ease;">
+                                {% else %}
+                                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                                        <i class="fas fa-image fa-3x text-muted"></i>
+                                    </div>
+                                {% endif %}
 
-                            <!-- Add to Watchlist form -->
-                            {% if user.is_authenticated %}
-                                <!-- In the watchlist toggle form, update the URL: -->
-                            <form action="{% url 'watchlist:toggle_watchlist' listing.id %}" method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" name="listing_id" value="{{ listing.id }}">
-                                <button type="submit" class="btn btn-{% if listing in user.watchlist.all %}outline-danger{% else %}outline-success{% endif %} btn-sm">
-                                    {% if listing in user.watchlist.all %}
-                                        Remove from Watchlist
-                                    {% else %}
-                                        Add to Watchlist
+                                <!-- Price Badge -->
+                                <div class="position-absolute top-0 end-0 m-3">
+                                    <span class="badge bg-danger fs-6 px-3 py-2 rounded-pill shadow">
+                                        ${{ listing.current_price }}
+                                    </span>
+                                </div>
+
+                                <!-- Category Badge -->
+                                <div class="position-absolute top-0 start-0 m-3">
+                                    <span class="badge bg-dark bg-opacity-75 text-white px-2 py-1 rounded">
+                                        {{ listing.category|default:"General" }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="card-body p-4">
+                                <h5 class="card-title fw-bold mb-2 text-dark">{{ listing.title }}</h5>
+                                <p class="card-text text-muted small mb-3" style="line-height: 1.5;">
+                                    {{ listing.description|truncatechars:80 }}
+                                </p>
+
+                                <!-- Price Info -->
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <small class="text-muted d-block">Starting Bid</small>
+                                        <strong class="text-success">${{ listing.starting_bid }}</strong>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-muted d-block">Current Bid</small>
+                                        <strong class="text-danger fs-5">${{ listing.current_price }}</strong>
+                                    </div>
+                                </div>
+
+                                <!-- Author Info -->
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-center me-2"
+                                         style="width: 35px; height: 35px; font-size: 14px;">
+                                        {{ listing.author.username|first|upper }}
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Listed by</small>
+                                        <strong class="small">{{ listing.author.username }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card Footer -->
+                            <div class="card-footer bg-white border-0 p-4 pt-0">
+                                <div class="d-flex gap-2 mb-3">
+                                    <a href="{% url 'auctions:listing_detail' listing.id %}"
+                                       class="btn btn-danger flex-fill fw-bold">
+                                        <i class="fas fa-gavel me-1"></i> Place Bid
+                                    </a>
+
+                                    {% if user.is_authenticated %}
+                                        <button class="btn btn-outline-secondary watchlist-btn"
+                                                data-listing-id="{{ listing.id }}">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
                                     {% endif %}
-                                </button>
-                            </form>
-                            {% endif %}
+                                </div>
+
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Listed {{ listing.created_at|timesince }} ago
+                                </small>
+                            </div>
+
+                            <!-- Hover Effect Overlay -->
+                            <div class="card-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center opacity-0">
+                                <a href="{% url 'auctions:listing_detail' listing.id %}"
+                                   class="btn btn-light btn-lg rounded-pill px-4 shadow">
+                                    <i class="fas fa-eye me-2"></i>View Details
+                                </a>
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <small class="text-muted">Posted by {{ listing.author.username }} on {{ listing.created_at|date:"M d, Y" }}</small>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <div class="bg-light rounded-3 p-5 mx-auto" style="max-width: 500px;">
+                            <i class="fas fa-gavel fa-4x text-muted mb-4"></i>
+                            <h3 class="mb-3">No Active Auctions</h3>
+                            <p class="text-muted mb-4">
+                                There are currently no active listings. Be the first to create one!
+                            </p>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'auctions:create' %}" class="btn btn-danger btn-lg px-4">
+                                    <i class="fas fa-plus me-2"></i>Create Listing
+                                </a>
+                            {% else %}
+                                <a href="{% url 'auctions:login' %}" class="btn btn-danger btn-lg px-4">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Sign In to Create
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="alert alert-info">No active listings available.</div>
-    {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    <style>
+        .auction-card {
+            transition: all 0.3s ease;
+            border-radius: 15px;
+        }
+
+        .auction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
+        }
+
+        .auction-card:hover .auction-image {
+            transform: scale(1.05);
+        }
+
+        .auction-card:hover .card-overlay {
+            opacity: 1 !important;
+            background: rgba(0,0,0,0.7);
+            transition: opacity 0.3s ease;
+        }
+
+        .watchlist-btn {
+            width: 45px;
+            height: 38px;
+            border-radius: 8px;
+        }
+
+        .watchlist-btn:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+
+        .badge {
+            font-weight: 500;
+        }
+
+        .card-footer {
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .bg-primary {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+        }
+    </style>
+
+    <script>
+        // Add some interactive functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Watchlist toggle functionality
+            const watchlistBtns = document.querySelectorAll('.watchlist-btn');
+            watchlistBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('fas');
+                    icon.classList.toggle('far');
+
+                    // Add a small animation
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+        });
+    </script>
 {% endblock %}

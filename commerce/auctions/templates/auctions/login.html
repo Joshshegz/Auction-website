@@ -1,24 +1,64 @@
 {% extends "auctions/layout.html" %}
 
-{% block body %}
-
-    <h2>Login</h2>
-
- {% if message %}
-    <div class="alert alert-danger">{{ message }}</div>
-{% endif %}
-
-    <form action="{% url 'auctions:login' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autofocus class="form-control" type="text" name="username" placeholder="Username">
+{% block content %}
+<div class="container login-form-container">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="login-form">
+        <div class="text-center mb-4">
+          <h2 class="fw-bold">Welcome Back</h2>
+          <p class="text-muted">Please enter your credentials to login</p>
         </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Login">
-    </form>
 
-    Don't have an account? <a href="{% url 'auctions:register' %}">Register here.</a>
+        {% if message %}
+          <div class="alert alert-danger">{{ message }}</div>
+        {% endif %}
 
+        <form action="{% url 'auctions:login' %}" method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required autofocus>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+          </div>
+          <div class="d-grid mb-3">
+            <button type="submit" class="btn btn-danger btn-lg">Login</button>
+          </div>
+          <div class="text-center">
+            <p class="mb-0">Don't have an account? <a href="{% url 'auctions:register' %}" class="text-danger fw-bold">Register here</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Fix for fixed navbar overlapping content */
+  body {
+    padding-top: 72px;
+  }
+
+  /* Custom styling for login form */
+  .login-form-container {
+    margin-top: 40px;
+    margin-bottom: 80px;
+  }
+
+  .login-form {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    padding: 30px;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding-top: 60px;
+    }
+  }
+</style>
 {% endblock %}

@@ -5,7 +5,8 @@ from watchlist.views import watchlist_view
 app_name = 'auctions'
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path("index/", views.index, name="index"),
+    path("", views.home_page, name="home"),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
     path("register/", views.register, name="register"),
@@ -15,4 +16,5 @@ urlpatterns = [
     path("categories/", views.categories_view, name="categories"),
     path("categories/<str:category_name>/", views.category_listings_view, name="category_listings"),
     path('listing/<int:listing_id>/comment/', views.add_comment, name='add_comment'),
-]
+    path('dashboard/', views.account_view, name='dashboard'),
+    ]
