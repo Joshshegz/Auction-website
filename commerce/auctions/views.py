@@ -285,3 +285,9 @@ def account_view(request):
         'completed_orders': 70,
     }
     return render(request, 'auctions/dashboard.html', context)
+
+
+@login_required
+def closed_listings(request):
+    closed_listing = AuctionListing.objects.filter(is_active=True).order_by('-date_added')
+    return render(request, 'auctions/closed_listing.html', {'listing': closed_listing})

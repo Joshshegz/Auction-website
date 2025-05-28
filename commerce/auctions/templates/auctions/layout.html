@@ -50,7 +50,7 @@
                 <a class="nav-link" href="{% url 'auctions:create' %}">Create Listing</a>
               </li>
               <li class="nav-item mx-2">
-                <a class="nav-link" href="">Closed Listings</a>
+                <a class="nav-link" href="{% url 'auctions:closed_listings' %}">Closed Listings</a>
               </li>
             {% else %}
               <li class="nav-item mx-2">
