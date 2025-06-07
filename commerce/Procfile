@@ -1,2 +1,1 @@
 web: gunicorn commerce.wsgi
-collectstatic: python manage.py collectstatic --noinput
