@@ -2,46 +2,45 @@
 {% load static %}
 
 {% block content %}
-  <!-- Header Section -->
-  <div class="container-fluid pt-5">
-    <div class="row mx-5 my-4">
-      <div class="col-12 col-md-12 col-lg-7 py-5 align-items-center">
-        <p class="text-danger fw-bold">Welcome to the Auction House</p>
-        <h1 class="display-3 fw-bold mb-3">Build, sell & collect digital items.</h1>
-        <p class="mb-5">
+  <!-- Header Section - Mobile Responsive -->
+  <div class="container-fluid pt-3 pt-md-5">
+    <div class="row mx-3 mx-md-5 my-2 my-md-4">
+      <div class="col-12 col-md-12 col-lg-7 py-3 py-md-5 align-items-center order-2 order-lg-1">
+        <p class="text-danger fw-bold mb-1">Welcome to the Auction House</p>
+        <h1 class="display-5 display-md-3 fw-bold mb-2 mb-md-3">Build, sell & collect digital items.</h1>
+        <p class="mb-3 mb-md-5">
           <small>
-            Nulla facilisi. Maecenas tellus ut ligula interdum convallis. Nullam dapibus on erat in dolor posuere, none hendrerit lectus ornare. Suspendisse sit amet turpina sagittis, ultrices dui et, aliquam urna.
+            Nulla facilisi. Maecenas tellus ut ligula interdum convallis. Nullam dapibus on erat in dolor posuere, none hendrerit lectus ornare.
           </small>
         </p>
         <a href="{% url 'auctions:index' %}" class="btn btn-lg btn-danger explore">Start Exploring</a>
       </div>
-      <div class="col-12 col-md-12 col-lg-5 py-5 align-items-center">
+      <div class="col-12 col-md-12 col-lg-5 py-3 py-md-5 align-items-center order-1 order-lg-2">
         <p><img src="{% static 'assets/images/chayka-boredapeclub.jpg' %}" alt="Bored Ape" class="img-fluid"></p>
       </div>
     </div>
   </div>
 
-  <!-- Live Auction -->
+  <!-- Live Auction - Mobile Responsive -->
   <div class="container-fluid">
-    <div class="row mx-5">
-      <div class="col-5">
+    <div class="row mx-3 mx-md-5">
+      <div class="col-12 col-md-5 mb-3 mb-md-0">
         <h1 class="display-5 fw-bold">Live Auction</h1>
-        <p>Explore on the world's best & largest Bidding marketplace with our beautiful Bidding products. We want to be a part of your smile, success and future growth.</p>
+        <p class="mb-md-0">Explore on the world's best & largest Bidding marketplace with our beautiful Bidding products.</p>
       </div>
       <div class="col-3 d-none d-lg-block"></div>
-      <div class="col-3 align-items-center d-flex justify-content-end">
-        <a href="{% url 'auctions:index' %}">
-          <button class="btn btn-lg px-5 btn-danger">View All</button>
+      <div class="col-12 col-md-4 align-items-center d-flex justify-content-md-end justify-content-start mt-2 mt-md-0">
+        <a href="{% url 'auctions:index' %}" class="w-100 w-md-auto">
+          <button class="btn btn-lg px-3 px-md-5 btn-danger w-100 w-md-auto">View All</button>
         </a>
       </div>
     </div>
 
-    <div class="row mx-5 mb-5 p-3">
-      <!-- Auction items would be dynamically generated here -->
+    <div class="row mx-1 mx-md-5 mb-5 p-1 p-md-3">
       {% for item in auction_items %}
         {% if item.id %}
-          <div class="col-12 col-md-6 col-lg-4 p-3 auction-card text-center">
-            <div class="p-3 auction border border-outline-1">
+          <div class="col-12 col-md-6 col-lg-4 p-2 p-md-3 auction-card text-center">
+            <div class="p-2 p-md-3 auction border border-outline-1">
               <div class="auction-photo">
                 {% if item.imageurl %}
                   <img src="{{ item.imageurl }}" alt="{{ item.title }}" class="img-fluid">
@@ -49,23 +48,23 @@
                   <img src="{% static 'assets/images/chayka-boredapeclub.jpg' %}" alt="{{ item.title }}" class="img-fluid">
                 {% endif %}
                 {% if item.time_remaining %}
-                  <p class="fw-bold auction-time text-danger bg-white m-0 p-3 mx-auto">{{ item.time_remaining }}</p>
+                  <p class="fw-bold auction-time text-danger bg-white m-0 p-2 p-md-3 mx-auto">{{ item.time_remaining }}</p>
                 {% endif %}
               </div>
               <div class="auction-details">
-                <h3 class="text-start fs-4">{{ item.title|default:"Untitled Item" }}</h3>
-                <div class="auctioner my-3 d-flex justify-content-between">
+                <h3 class="text-start fs-5 fs-md-4">{{ item.title|default:"Untitled Item" }}</h3>
+                <div class="auctioner my-2 my-md-3 d-flex justify-content-between">
                   <div class="user d-flex align-items-center">
-                    <img src="{% static 'assets/images/live-auc1.png' %}" alt="auction author" class="img-fluid me-3">
-                    <p class="">By {% if item.author %}{{ item.author.username }}{% else %}Unknown{% endif %}</p>
+                    <img src="{% static 'assets/images/live-auc1.png' %}" alt="auction author" class="img-fluid me-2 me-md-3" style="width: 30px;">
+                    <p class="m-0"><small>By {% if item.author %}{{ item.author.username }}{% else %}Unknown{% endif %}</small></p>
                   </div>
-                  <h4 class="text-danger">${{ item.current_price|default:"0.00" }}</h4>
+                  <h4 class="text-danger m-0">${{ item.current_price|default:"0.00" }}</h4>
                 </div>
                 <div class="auction-action d-flex align-items-center justify-content-between">
-                  <a href="{% url 'auctions:listing_detail' item.id %}" class="btn btn-md btn-danger">Place a Bid</a>
+                  <a href="{% url 'auctions:listing_detail' item.id %}" class="btn btn-sm btn-md btn-danger">Place a Bid</a>
                   <div class="action-btns d-flex justify-content-between">
-                    <i class="fa fa-2x text-secondary fa-solid fa-heart me-3"></i>
-                    <i class="fa fa-2x fa-solid fa-ellipsis-v"></i>
+                    <i class="fa fa-lg text-secondary fa-solid fa-heart me-2 me-md-3"></i>
+                    <i class="fa fa-lg fa-solid fa-ellipsis-v"></i>
                   </div>
                 </div>
               </div>
@@ -80,30 +79,30 @@
     </div>
   </div>
 
-  <!-- Testimonials -->
+  <!-- Testimonials - Mobile Responsive -->
   <div class="container-fluid mb-5 pb-5">
     <div class="row text-center">
       <div class="col-2 d-none d-lg-block"></div>
-      <div class="col-12 col-lg-8 my-5">
-        <h1>What Clients Say</h1>
-        <p class="mx-5 px-5">Explore on the world's best & largest Bidding marketplace with our beautiful Bidding products. We want to be a part of your smile, success and future growth.</p>
+      <div class="col-12 col-lg-8 my-3 my-md-5 px-3">
+        <h1 class="fs-2 fs-md-1">What Clients Say</h1>
+        <p class="mx-md-5 px-md-5">Explore on the world's best & largest Bidding marketplace with our beautiful Bidding products.</p>
       </div>
       <div class="col-2 d-none d-lg-block"></div>
     </div>
 
-    <div class="row mx-5 px-3">
+    <div class="row mx-1 mx-md-5 px-1 px-md-3">
       {% for testimonial in testimonials %}
-        <div class="col-12 col-md-6 col-lg-4 p-2">
-          <div class="testimonial p-3">
+        <div class="col-12 col-md-6 col-lg-4 p-1 p-md-2 mb-3 mb-md-0">
+          <div class="testimonial p-2 p-md-3">
             <div class="img-group d-flex justify-content-between">
               <div class="test-desc d-grid">
-                <img src="{% static 'assets/images/testi1.png' %}" alt="{{ testimonial.name|default:'Anonymous' }}" class="testimonial-img img-fluid mb-3">
-                <h5 class="mb-0">{{ testimonial.name|default:"Anonymous" }}</h5>
-                <p><small>{{ testimonial.position|default:"Customer" }}</small></p>
+                <img src="{% static 'assets/images/testi1.png' %}" alt="{{ testimonial.name|default:'Anonymous' }}" class="testimonial-img img-fluid mb-2 mb-md-3" style="width: 60px;">
+                <h5 class="mb-0 fs-6 fs-md-5">{{ testimonial.name|default:"Anonymous" }}</h5>
+                <p class="m-0"><small>{{ testimonial.position|default:"Customer" }}</small></p>
               </div>
             </div>
-            <div class="testimonial-text">
-              <p><em>{{ testimonial.text|default:"Great experience!" }}</em></p>
+            <div class="testimonial-text mt-2">
+              <p class="m-0"><small><em>{{ testimonial.text|default:"Great experience!" }}</em></small></p>
             </div>
           </div>
         </div>
@@ -111,37 +110,37 @@
     </div>
   </div>
 
-  <!-- Upcoming Auction -->
+  <!-- Upcoming Auction - Mobile Responsive -->
   <div class="container-fluid pb-5">
-    <div class="row mx-5 mb-5">
+    <div class="row mx-3 mx-md-5 mb-3 mb-md-5">
       <div class="col-12 col-lg-7">
-        <h1>Upcoming Auctions</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum tempore possimus consectetur laboriosam excepturi eveniet non quaerat nulla voluptatem praesentium</p>
+        <h1 class="fs-2 fs-md-1">Upcoming Auctions</h1>
+        <p class="m-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum tempore possimus consectetur laboriosam excepturi</p>
       </div>
     </div>
 
-    <div class="row m-5">
+    <div class="row m-1 m-md-5">
       {% for upcoming in upcoming_auctions %}
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0">
           <div class="upcoming-item border border-outline-1">
             <div class="issue">
               <img src="{% static 'assets/images/upcoming1.jpg' %}" alt="{{ upcoming.title|default:'Upcoming Item' }}" class="img-fluid w-100">
-              <div class="upcoming-timer text-center bg-black text-white d-flex justify-content-center px-3 py-2">
-                <div class="days col"><b>{{ upcoming.days|default:"0" }}</b><br>Days</div>
-                <div class="days col"><b>{{ upcoming.hours|default:"0" }}</b><br>Hours</div>
-                <div class="days col"><b>{{ upcoming.minutes|default:"0" }}</b><br>Mins</div>
-                <div class="days col"><b>{{ upcoming.seconds|default:"0" }}</b><br>Secs</div>
+              <div class="upcoming-timer text-center bg-black text-white d-flex justify-content-center px-2 px-md-3 py-1 py-md-2">
+                <div class="days col"><small><b>{{ upcoming.days|default:"0" }}</b><br>Days</small></div>
+                <div class="days col"><small><b>{{ upcoming.hours|default:"0" }}</b><br>Hours</small></div>
+                <div class="days col"><small><b>{{ upcoming.minutes|default:"0" }}</b><br>Mins</small></div>
+                <div class="days col"><small><b>{{ upcoming.seconds|default:"0" }}</b><br>Secs</small></div>
               </div>
             </div>
-            <div class="issue-desc px-2 pt-2">
-              <div class="upcoming-author px-2 py-2">
-                <p class="fw-bold">{{ upcoming.timezone|default:"UTC" }}</p>
-                <h4>{{ upcoming.title|default:"Upcoming Auction" }}</h4>
-                <p class="">Bidding Price: <b class="text-danger fw-bold fs-4">${{ upcoming.price|default:"0.00" }}</b></p>
-                <div class="auction-action d-flex align-items-center justify-content-between mb-4">
-                  <button class="btn btn-md btn-danger">View Details</button>
+            <div class="issue-desc px-1 px-md-2 pt-1 pt-md-2">
+              <div class="upcoming-author px-1 px-md-2 py-1 py-md-2">
+                <p class="fw-bold mb-1">{{ upcoming.timezone|default:"UTC" }}</p>
+                <h4 class="fs-5 fs-md-4">{{ upcoming.title|default:"Upcoming Auction" }}</h4>
+                <p class="m-0">Bidding Price: <b class="text-danger fw-bold fs-5">${{ upcoming.price|default:"0.00" }}</b></p>
+                <div class="auction-action d-flex align-items-center justify-content-between mt-2 mt-md-3 mb-2 mb-md-4">
+                  <button class="btn btn-sm btn-md btn-danger">View Details</button>
                   <div class="action-btns d-flex justify-content-between">
-                    <i class="fa fa-2x fa-solid fa-ellipsis-v"></i>
+                    <i class="fa fa-lg fa-solid fa-ellipsis-v"></i>
                   </div>
                 </div>
               </div>
@@ -152,22 +151,22 @@
     </div>
   </div>
 
-  <!-- Trustees -->
-  <div class="container-fluid trustees pb-5 mb-5">
-    <div class="row py-5">
-      <div class="col-3 d-none d-md-block"></div>
-      <div class="col-12 col-md-6 text-center">
-        <h1>Trusted by 500+ Companies</h1>
-        <p>Explore on the world's best & largest Bidding marketplace with our beautiful Bidding products. We want to be a part of your smile, success and future growth.</p>
+  <!-- Trustees - Mobile Responsive -->
+  <div class="container-fluid trustees pb-3 pb-md-5 mb-3 mb-md-5">
+    <div class="row py-3 py-md-5">
+      <div class="col-1 d-none d-md-block"></div>
+      <div class="col-12 col-md-10 text-center px-3">
+        <h1 class="fs-2 fs-md-1">Trusted by 500+ Companies</h1>
+        <p>Explore on the world's best & largest Bidding marketplace with our beautiful Bidding products.</p>
       </div>
-      <div class="col-3 d-none d-md-block"></div>
+      <div class="col-1 d-none d-md-block"></div>
     </div>
 
-    <div class="row companies text-center px-5 mx-5 pb-5">
+    <div class="row companies text-center px-1 px-md-5 mx-1 mx-md-5 pb-3 pb-md-5">
       {% for sponsor in sponsors %}
-        <div class="col-6 col-md-4 col-lg-2 mb-3 text-center">
+        <div class="col-4 col-md-4 col-lg-2 mb-3 text-center">
           {% if sponsor.image %}
-            <img src="{% static sponsor.image %}" alt="{{ sponsor.name|default:'Sponsor' }}" class="img-fluid">
+            <img src="{% static sponsor.image %}" alt="{{ sponsor.name|default:'Sponsor' }}" class="img-fluid" style="max-height: 40px;">
           {% endif %}
         </div>
       {% endfor %}
